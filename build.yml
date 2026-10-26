@@ -36,11 +36,14 @@ jobs:
         working-directory: VideoTeiler
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-        run: gradle assembleRelease --no-daemon --stacktrace
+        run: gradle assembleGratisRelease assembleProRelease bundleGratisRelease bundleProRelease --no-daemon --stacktrace
       - name: Release veröffentlichen
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cp VideoTeiler/app/build/outputs/apk/release/app-release.apk Video-Teiler.apk
+          cp VideoTeiler/app/build/outputs/apk/gratis/release/app-gratis-release.apk Video-Teiler.apk
+          cp VideoTeiler/app/build/outputs/apk/pro/release/app-pro-release.apk Video-Teiler-Pro.apk
+          cp VideoTeiler/app/build/outputs/bundle/gratisRelease/app-gratis-release.aab Video-Teiler.aab
+          cp VideoTeiler/app/build/outputs/bundle/proRelease/app-pro-release.aab Video-Teiler-Pro.aab
           gh release delete aktuell --yes --cleanup-tag || true
-          gh release create aktuell Video-Teiler.apk --title "Video-Teiler" --notes "Aktuelle Version" --target "${{ github.sha }}"
+          gh release create aktuell Video-Teiler.apk Video-Teiler-Pro.apk Video-Teiler.aab Video-Teiler-Pro.aab --title "Video-Teiler" --notes "Aktuelle Version (Gratis mit Werbung, Pro ohne Werbung)" --target "${{ github.sha }}"
