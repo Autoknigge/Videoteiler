@@ -48,7 +48,7 @@ jobs:
         working-directory: VideoTeiler
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-        run: gradle assembleGratisRelease assembleStartRelease assembleProRelease bundleGratisRelease bundleStartRelease bundleProRelease --no-daemon --stacktrace
+        run: gradle assembleGratisRelease assembleStartRelease assembleProRelease bundleGratisRelease bundleStartRelease bundleProRelease bundlePlayRelease --no-daemon --stacktrace
       - name: Release veröffentlichen
         env:
           GH_TOKEN: ${{ github.token }}
@@ -59,5 +59,6 @@ jobs:
           cp VideoTeiler/app/build/outputs/bundle/gratisRelease/app-gratis-release.aab Video-Teiler.aab
           cp VideoTeiler/app/build/outputs/bundle/startRelease/app-start-release.aab Video-Teiler-Start.aab
           cp VideoTeiler/app/build/outputs/bundle/proRelease/app-pro-release.aab Video-Teiler-Pro.aab
+          cp VideoTeiler/app/build/outputs/bundle/playRelease/app-play-release.aab Video-Teiler-Play.aab
           gh release delete aktuell --yes --cleanup-tag || true
-          gh release create aktuell Video-Teiler.apk Video-Teiler-Start.apk Video-Teiler-Pro.apk Video-Teiler.aab Video-Teiler-Start.aab Video-Teiler-Pro.aab --title "Video-Teiler $VERSION_NAME" --notes "Version $VERSION_NAME (Gratis mit Werbebanner, Start mit Startwerbung, Pro ohne Werbung)" --target "${{ github.sha }}"
+          gh release create aktuell Video-Teiler.apk Video-Teiler-Start.apk Video-Teiler-Pro.apk Video-Teiler.aab Video-Teiler-Start.aab Video-Teiler-Pro.aab Video-Teiler-Play.aab --title "Video-Teiler $VERSION_NAME" --notes "Version $VERSION_NAME (Gratis mit Werbebanner, Start mit Startwerbung, Pro ohne Werbung)" --target "${{ github.sha }}"
