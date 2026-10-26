@@ -20,7 +20,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           prev=$(gh release view aktuell --json body -q .body 2>/dev/null | grep -o 'Version [0-9]*\.[0-9]*' | head -n 1 | cut -d' ' -f2 || true)
-          if [ -z "$prev" ]; then v="1.0"; else v="${prev%%.*}.$(( ${prev#*.} + 1 ))"; fi
+          if [ -z "$prev" ]; then v="1.0"
+          else
+            major="${prev%%.*}"; minor="${prev#*.}"
+            if [ "$minor" -ge 9 ]; then v="$(( major + 1 )).0"; else v="${major}.$(( minor + 1 ))"; fi
+          fi
           echo "Version: $v"
           echo "VERSION_NAME=$v" >> "$GITHUB_ENV"
       - uses: actions/setup-java@v4
